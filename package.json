@@ -1,0 +1,37 @@
+{
+  "name": "@architect/plugin-external-tables",
+  "version": "0.0.0",
+  "description": "Architect plugin for accessing external and legacy DynamoDB tables",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "npm run lint && npm run coverage",
+    "test:unit": "cross-env tape 'test/unit/**/*-test.js' | tap-spec",
+    "coverage": "nyc --reporter=lcov --reporter=text npm run test:unit",
+    "lint": "eslint . --fix",
+    "rc": "npm version prerelease --preid RC"
+  },
+  "engines": {
+    "node": ">=14"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/architect/plugin-external-tables.git"
+  },
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@architect/package": "^7.0.3",
+    "@architect/utils": "^3.0.3"
+  },
+  "devDependencies": {
+    "@architect/eslint-config": "^2.0.0",
+    "@architect/inventory": "^2.0.6",
+    "cross-env": "^7.0.3",
+    "eslint": "^7.32.0",
+    "nyc": "^15.1.0",
+    "tap-spec": "^5.0.0",
+    "tape": "^5.3.1"
+  },
+  "eslintConfig": {
+    "extends": "@architect/eslint-config"
+  }
+}
