@@ -1,15 +1,13 @@
-module.exports = function getTableQueries (externalTables, otherTables) {
+module.exports = function getTableQueries (externalTables) {
   let tableQueries = []
-  if (externalTables) {
-    externalTables.forEach(list => {
-      let app = Object.keys(list)[0]
-      list[app].forEach(name => tableQueries.push({ app, name }))
-    })
-  }
-  if (otherTables) {
-    let stageVar = '$arc_stage'
-    let legacyStage = /\$arc_stage/
-    otherTables.forEach(table => {
+  externalTables.forEach(table => {
+    if (typeof table === 'object') {
+      let app = Object.keys(table)[0]
+      table[app].forEach(name => tableQueries.push({ app, name }))
+    }
+    else {
+      let stageVar = '$arc_stage'
+      let legacyStage = /\$arc_stage/
       if (table.match(legacyStage)) {
         let bits = table.split(stageVar)
         if (bits.filter(Boolean).length !== 2) throw Error(`Invalid legacy table name: ${table}`)
@@ -20,7 +18,8 @@ module.exports = function getTableQueries (externalTables, otherTables) {
         })
       }
       tableQueries.push({ name: table })
-    })
-  }
+    }
+
+  })
   return tableQueries
 }

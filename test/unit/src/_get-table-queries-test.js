@@ -9,7 +9,7 @@ test('Set up env', t => {
   t.ok(getTableQueries, 'Get table queries module is present')
 })
 
-test('External tables (`@external-tables`)', async t => {
+test('Other Arc tables', async t => {
   t.plan(1)
   let rawArc = `
 @app
@@ -35,18 +35,68 @@ app-2
   t.deepEqual(q, correctQueries, 'Got correct external table queries')
 })
 
-test('Other tables (`@other-tables`)', async t => {
+test('Legacy Arc tables', async t => {
   t.plan(1)
   let rawArc = `
 @app
 app
-@other-tables
+@external-tables
+legacy-app-$arc_stage-data
+diff-app-$arc_stage-users
+`
+  let correctQueries = [
+    { app: 'legacy-app', name: 'data', legacy: true },
+    { app: 'diff-app', name: 'users', legacy: true },
+  ]
+  let { inv } = await _inventory({ rawArc })
+  let arc = inv._project.arc
+  let q = getTableQueries(arc['external-tables'])
+  console.log('Legacy table queries:', q)
+  t.deepEqual(q, correctQueries, 'Got correct other table queries')
+})
+
+test('Physical table names', async t => {
+  t.plan(1)
+  let rawArc = `
+@app
+app
+@external-tables
+users
+products
+`
+  let correctQueries = [
+    { name: 'users' },
+    { name: 'products' }
+  ]
+  let { inv } = await _inventory({ rawArc })
+  let arc = inv._project.arc
+  let q = getTableQueries(arc['external-tables'])
+  console.log('Physical table name queries:', q)
+  t.deepEqual(q, correctQueries, 'Got correct other table queries')
+})
+
+test('All the things', async t => {
+  t.plan(1)
+  let rawArc = `
+@app
+app
+@external-tables
+app-1
+  table-a
+  table-b
+app-2
+  table-c
+  table-d
 legacy-app-$arc_stage-data
 diff-app-$arc_stage-users
 users
 products
 `
   let correctQueries = [
+    { app: 'app-1', name: 'table-a' },
+    { app: 'app-1', name: 'table-b' },
+    { app: 'app-2', name: 'table-c' },
+    { app: 'app-2', name: 'table-d' },
     { app: 'legacy-app', name: 'data', legacy: true },
     { app: 'diff-app', name: 'users', legacy: true },
     { name: 'users' },
@@ -54,24 +104,7 @@ products
   ]
   let { inv } = await _inventory({ rawArc })
   let arc = inv._project.arc
-  let q = getTableQueries(undefined, arc['other-tables'])
-  console.log('Other table queries:', q)
-  t.deepEqual(q, correctQueries, 'Got correct other table queries')
-})
-
-test('Invalid tables (`@other-tables`)', async t => {
-  t.plan(1)
-  let rawArc = `
-@app
-app
-@other-tables
-legacy-app-$arc_stage
-`
-  let { inv } = await _inventory({ rawArc })
-  let arc = inv._project.arc
-  t.throws(() => {
-    getTableQueries(undefined, arc['other-tables'])
-  }, {
-    message: 'Invalid legacy table name: legacy-app-$arc_stage'
-  }, 'Found invalid table name')
+  let q = getTableQueries(arc['external-tables'])
+  console.log('External table queries:', q)
+  t.deepEqual(q, correctQueries, 'Got correct external table queries')
 })

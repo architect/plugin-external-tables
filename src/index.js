@@ -8,14 +8,13 @@ let getTablesPolicy = require('./_get-tables-policy')
 
 async function package ({ arc, cloudformation, stage, inventory }) {
   let externalTables = arc['external-tables']
-  let otherTables = arc['other-tables']
 
-  if (!externalTables && !otherTables) return cloudformation
+  if (!externalTables) return cloudformation
   let dynamo = new aws.DynamoDB()
   let ssm = new aws.SSM()
 
   // Prep for SSM and DynamoDB queries to get final table ARNs
-  let tableQueries = getTableQueries(externalTables, otherTables)
+  let tableQueries = getTableQueries(externalTables)
 
   // Check for table name conflicts
   validateTableNames(tableQueries, inventory)

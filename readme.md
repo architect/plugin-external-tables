@@ -19,43 +19,28 @@ Add this line to your Architect project manifest:
 architect/plugin-external-tables
 ```
 
-Then follow the directions below for `@arc-tables` and/or `@other-tables`.
+Then follow the directions below for `@external-tables`.
 
 > Note: this plugin currently only supports enabling access to tables in the same region. For example: if your app is in `us-west-1`, this plugin will not enable access to external tables in `us-east-1`.
 
 ---
 
-### `@arc-tables`
+### `@external-tables`
 
-The `@arc-tables` pragma identifies tables managed by non-legacy versions (>=6) of Architect. Each entry is a named list, where the name is the `@app` name of the external Architect app, and the list is of tables to which you'd like to provide access.
+The `@external-tables` pragma enables access to DynamoDB tables managed by current and legacy versions of Architect, and an arbitrary number of physical DynamoDB table names. Usage for each:
 
-In the following example, resources in the `new-app` Architect app would get access two external tables:
-- The `users` table from the app named `an-existing-arc-app`, and
-- The `products` table from the app named `another-existing-arc-app`
-
-```
-@app
-new-app
-
-@arc-tables
-an-existing-arc-app
-  users
-another-existing-arc-app
-  products
-```
-
-
-### `@other-tables`
-
-The `@other-tables` pragma enables access to legacy Architect tables, or an arbitrary number of physical table names. Usage for each:
-
-- Legacy Architect tables
-  - These follow convention-based naming, and require a special variable string, like so: `old-app-$arc_stage-users`; this breaks down as follows:
+- **Other Architect tables**
+  - Each entry is a named list, where the name is the `@app` name of the external Architect app, and the list is of tables to which you'd like to provide access
+  - In the [example below](#examples), resources in the `my-app` Architect app would get access three external tables:
+    - The `analytics` + `data` tables from the app named `an-arc-app`, and
+    - The `usage` table from the app named `another-arc-app `
+- **Legacy Architect tables**
+  - Each entry is a string; legacy Arc tables follow convention-based naming, and require a special variable, like so: `old-app-$arc_stage-users`; this breaks down as follows:
     - `old-app` - the `@app` name of your legacy Arc app
     - `$arc_stage` - a special string used by this plugin to identify the deployment stage (`staging` or `production`) of the table
     - `users` - the `@tables` name of your legacy table
-- Physical table names
-  - Any arbitrary table name can be used here, e.g. `user-data`
+- **Physical table names**
+  - Each entry is a string; any arbitrary table name can be used here, e.g. `user-data`
   - Note: physical table names are not to be confused with ARNs; DynamoDB ARNs cannot be used by this plugin
 
 
@@ -81,18 +66,16 @@ An example providing an Architect app access to the internal table named `produc
 @app
 my-app
 
-@tables           # tables managed by this Architect app
+@tables                   # tables managed by this Architect app
 products
   id *String
 
-@arc-tables       # tables managed by other Arc apps in the same region
-an-arc-app        # app name
-  analytics       # table names...
+@external-tables          # tables managed by other Arc apps in the same region
+an-arc-app                # app name
+  analytics               # table names...
   data
-another-arc-app   # another app
-  usage           # more tables...
-
-@other-tables     # legacy Arc tables and/or tables not managed by Arc
+another-arc-app           # another app
+  usage
 old-app-$arc_stage-users  # legacy Arc table
 user-data                 # DynamoDB table not created/managed by Arc
 ```
@@ -103,17 +86,15 @@ This example **would not work** due to [table name uniqueness conflicts](#table-
 @app
 broken-tables
 
-@tables           # tables managed by this Architect app
+@tables                       # tables managed by this Architect app
 products
   id *String
 
-@arc-tables
+@external-tables
 an-arc-app
-  products        # conflicts with @tables products
+  products                    # conflicts with @tables products
 another-arc-app
-  products        # conflicts with @tables products
-
-@other-tables
+  products                    # conflicts with @tables products
 old-app-$arc_stage-products   # conflicts with @tables products
 products                      # conflicts with @tables products
 ```
