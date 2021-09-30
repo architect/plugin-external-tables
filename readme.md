@@ -11,24 +11,25 @@
 
 `npm i @architect/plugin-external-tables`
 
-Add this line to your Architect project manifest (example given in Arc format):
+Add this line to your Architect project manifest:
 
 ```arc
+# app.arc
 @plugins
 architect/plugin-external-tables
 ```
 
 Then follow the directions below for `@arc-tables` and/or `@other-tables`.
 
-> Note: this plugin currently only supports enables access to tables in the same region. If your app is in `us-west-1`, this plugin will not enable access external tables in `us-east-1`.
+> Note: this plugin currently only supports enabling access to tables in the same region. For example: if your app is in `us-west-1`, this plugin will not enable access to external tables in `us-east-1`.
 
 ---
 
 ### `@arc-tables`
 
-These `@arc-tables` pragma identifies tables managed by non-legacy versions (>=6) of Architect. Each entry is a named list, where the name is the `@app` name of the external Architect app, and the list is of tables you'd like to provide access to.
+The `@arc-tables` pragma identifies tables managed by non-legacy versions (>=6) of Architect. Each entry is a named list, where the name is the `@app` name of the external Architect app, and the list is of tables to which you'd like to provide access.
 
-In the following example, resources in the `new-app` Architect app would get access two two external tables:
+In the following example, resources in the `new-app` Architect app would get access two external tables:
 - The `users` table from the app named `an-existing-arc-app`, and
 - The `products` table from the app named `another-existing-arc-app`
 
@@ -69,7 +70,7 @@ If a conflict is found, this plugin will error. For example, you may have the fo
 - `another-arc-app-staging-users` - a table named `users` originally created by a legacy Architect app named `another-arc-app`
 - `users` - a table just named `users` created outside of Architect
 
-Because of how Architect manages automatic service discovery for tables with `@architect/functions` all four of these tables would be in conflict for the logical table name `users` (e.g. `arc.tables().users.get()`).
+Because of how Architect manages automatic service discovery for tables with `@architect/functions` all four of these tables would be in conflict with the logical table name `users` (e.g. `arc.tables().users.get()`).
 
 
 ### Examples
@@ -80,7 +81,7 @@ An example providing an Architect app access to the internal table named `produc
 @app
 my-app
 
-@tables           # tables managed managed by this Architect app
+@tables           # tables managed by this Architect app
 products
   id *String
 
@@ -102,7 +103,7 @@ This example **would not work** due to [table name uniqueness conflicts](#table-
 @app
 broken-tables
 
-@tables           # tables managed managed by this Architect app
+@tables           # tables managed by this Architect app
 products
   id *String
 
