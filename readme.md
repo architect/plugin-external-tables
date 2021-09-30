@@ -1,9 +1,13 @@
-# `@architect/plugin-external-tables`
+[<img src="https://s3-us-west-2.amazonaws.com/arc.codes/architect-logo-500b@2x.png" width=500>](https://www.npmjs.com/package/@architect/plugin-external-tables)
 
-## Enable access to external DynamoDB tables from other Architect projects, legacy Architect projects, and non-Architect projects
+## [`@architect/plugin-external-tables`](https://www.npmjs.com/package/@architect/plugin-external-tables)
+
+> Enable access to external DynamoDB tables from other Architect projects, legacy Architect projects, and non-Architect projects
+
+[![GitHub CI status](https://github.com/architect/plugin-external-tables/workflows/Node%20CI/badge.svg)](https://github.com/architect/plugin-external-tables/actions?query=workflow%3A%22Node+CI%22)
 
 
-### Installation
+### Install
 
 `npm i @architect/plugin-external-tables`
 
