@@ -6,7 +6,7 @@ let getTableQueries = require('./_get-table-queries')
 let validateTableNames = require('./_validate-table-names')
 let getTablesPolicy = require('./_get-tables-policy')
 
-async function package ({ arc, cloudformation, stage, inventory }) {
+async function start ({ arc, cloudformation, stage, inventory }) {
   let externalTables = arc['external-tables']
 
   if (!externalTables) return cloudformation
@@ -89,4 +89,4 @@ async function package ({ arc, cloudformation, stage, inventory }) {
 
   return cloudformation
 }
-module.exports = { package }
+module.exports = { deploy: { start } }
