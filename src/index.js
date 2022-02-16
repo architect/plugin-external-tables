@@ -89,4 +89,5 @@ async function start ({ arc, cloudformation, stage, inventory }) {
 
   return cloudformation
 }
+
 module.exports = { deploy: { start } }
