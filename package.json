@@ -19,12 +19,12 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
+    "@architect/inventory": "^2.2.1",
     "@architect/package": "^7.2.0",
     "@architect/utils": "^3.0.4"
   },
   "devDependencies": {
     "@architect/eslint-config": "^2.0.1",
-    "@architect/inventory": "^2.2.1",
     "cross-env": "^7.0.3",
     "eslint": "^8.9.0",
     "nyc": "^15.1.0",
